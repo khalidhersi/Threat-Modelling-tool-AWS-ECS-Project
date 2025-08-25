@@ -1,0 +1,73 @@
+name: Deploy to ECS
+
+on:
+  push:
+    branches: 
+      - main
+
+env:
+  AWS_REGION: eu-west-2
+  ECR_REPOSITORY: ecs-threat-composer-tool
+  ECS_CLUSTER: ecs-threat-composer-tool-cluster
+  ECS_SERVICE: ecs-threat-composer-tool-service
+  ECS_TASK_FAMILY: ecs-threat-composer-tool
+  CONTAINER_NAME: ecs-threat-composer-tool
+
+jobs:
+  deploy:
+    name: Build and Deploy to ECS
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials from OIDC
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Log in to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and Push Docker image to ECR
+        run: |
+          docker build -t $ECR_REPOSITORY:latest .
+          docker tag $ECR_REPOSITORY:latest 226754875437.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/$ECR_REPOSITORY:latest
+          docker push 226754875437.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/$ECR_REPOSITORY:latest
+
+      - name: Get current ECS task definition
+        run: |
+          aws ecs describe-task-definition \
+            --task-definition $ECS_TASK_FAMILY \
+            --query taskDefinition \
+            --output json > task-definition.json
+
+      - name: Update image in task definition
+        run: |
+          NEW_IMAGE="226754875437.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/$ECR_REPOSITORY:latest"
+          jq --arg IMAGE "$NEW_IMAGE" \
+             --arg NAME "$CONTAINER_NAME" \
+             '(.containerDefinitions[] | select(.name == $NAME) | .image) |= $IMAGE' \
+             task-definition.json > new-task-definition.json
+
+      - name: Register updated task definition
+        id: register
+        run: |
+          TASK_DEF_ARN=$(aws ecs register-task-definition \
+            --cli-input-json file://new-task-definition.json \
+            --query 'taskDefinition.taskDefinitionArn' \
+            --output text)
+          echo "TASK_DEF_ARN=$TASK_DEF_ARN" >> $GITHUB_ENV
+
+      - name: Update ECS service with new task definition
+        run: |
+          aws ecs update-service \
+            --cluster $ECS_CLUSTER \
+            --service $ECS_SERVICE \
+            --task-definition $TASK_DEF_ARN
