@@ -15,7 +15,7 @@ resource "aws_ecs_task_definition" "this" {
   container_definitions = jsonencode([
     {
       name      = var.container_name
-      image     = var.container_image
+      image     = var.initial_container_image
       essential = true
       portMappings = [
         {
@@ -26,6 +26,7 @@ resource "aws_ecs_task_definition" "this" {
     }
   ])
 }
+
 
 # running the orchestration on ECS
 resource "aws_ecs_service" "this" {

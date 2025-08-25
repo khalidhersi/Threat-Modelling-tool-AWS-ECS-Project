@@ -9,3 +9,7 @@ output "ecr_url" {
 output "ecs_service_name" {
   value = module.ecs.service_name
 }
+
+output "ecs_execution_role_arn" {
+  value = module.ecs.execution_role_arn
+}

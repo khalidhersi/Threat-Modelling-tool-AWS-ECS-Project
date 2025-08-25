@@ -31,7 +31,7 @@ module "ecs" {
   family          = var.family
   service_name    = var.service_name
   container_name  = var.container_name
-  container_image = module.ecr.ecr_repository_url
+  container_image = var.container_image
   container_port  = var.container_port
   cpu             = var.cpu
   memory          = var.memory

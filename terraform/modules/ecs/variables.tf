@@ -61,3 +61,9 @@ variable "security_group_id" {
   type        = string
   description = "Security group ID for ECS tasks"
 }
+
+variable "initial_container_image" {
+  type        = string
+  description = "Initial image to deploy; updated later via GitHub Actions"
+  default     = "226754875437.dkr.ecr.eu-west-2.amazonaws.com/ecs-threat-composer-tool:latest"
+}
