@@ -1,4 +1,4 @@
-variable aws_region {
+variable "aws_region" {
   type        = string
   description = "region chosen"
   default     = "eu-west-2"
@@ -41,8 +41,8 @@ variable "container_name" {
 }
 
 variable "container_image" {
-   type        = string
-   description = "ECR image to deploy"
+  type        = string
+  description = "ECR image to deploy"
 }
 
 variable "container_port" {

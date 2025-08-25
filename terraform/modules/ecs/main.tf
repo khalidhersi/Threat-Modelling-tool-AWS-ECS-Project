@@ -5,8 +5,8 @@ resource "aws_ecs_cluster" "thiis" {
 
 # building the template for the container 
 resource "aws_ecs_task_definition" "this" {
-  family = var.family
-  requires_compatibilities = [ "FARGATE" ]
+  family                   = var.family
+  requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = var.cpu
   memory                   = var.memory
@@ -36,9 +36,9 @@ resource "aws_ecs_service" "this" {
   desired_count   = var.desired_count
 
   network_configuration {
-    subnets         = var.private_subnets
+    subnets          = var.private_subnets
     assign_public_ip = false
-    security_groups = [var.security_group_id]
+    security_groups  = [var.security_group_id]
   }
 
   depends_on = [aws_iam_role_policy_attachment.ecs_execution]
