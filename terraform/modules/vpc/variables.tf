@@ -49,7 +49,7 @@ variable "availability_zone2" {
 variable "bucket_name" {
   type        = string
   description = "Unique S3 bucket name"
-  default     = "khalids-ecs-threat-composer-tool-s3-bucket"
+  default     = "klds-ecs-threat-composer-tool-s3-bucket"
 }
 
 variable "all_ports_cidr" {

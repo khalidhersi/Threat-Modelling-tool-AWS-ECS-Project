@@ -23,7 +23,7 @@ This repo now includes a **fully automated, cloud-native DevOps pipeline**, usin
   - 🛠 Patches ECS task definition
   - 🚢 Updates ECS Service — **no manual `terraform apply` needed**
 - **GitHub OIDC IAM Role** — secure, access-key-free deploys
-- **S3 Bucket Provisioned**: `khalids-ecs-threat-composer-tool-s3-bucket`
+- **S3 Bucket Provisioned**: `klds-ecs-threat-composer-tool-s3-bucket`
 - **AWS Region**: `eu-west-2 (London)`
 
 ---
@@ -43,7 +43,7 @@ This repo now includes a **fully automated, cloud-native DevOps pipeline**, usin
 - **Private Subnets** (for ECS tasks)
 - **Public Subnets** (for ALB)
 - **NAT Gateway** (to allow ECS tasks internet access)
-- **S3 Bucket**: `khalids-ecs-threat-composer-tool-s3-bucket`
+- **S3 Bucket**: `klds-ecs-threat-composer-tool-s3-bucket`
 - **IAM Roles**:
   - ECS Task Execution Role
   - GitHub OIDC Deployment Role (`github-deploy-role`)
