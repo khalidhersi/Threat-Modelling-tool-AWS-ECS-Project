@@ -1,41 +1,45 @@
 variable "cluster_name" {
-  default = ""
+  type = string
 }
 
 variable "family" {
-  default = ""
+  type = string
 }
 
 variable "service_name" {
-  default = ""
+type = string
 }
 
 variable "container_name" {
-  default = ""
+ type = string
 }
 
 variable "container_image" {
-  default = ""
+  type = string
 }
 
 variable "container_port" {
+  type = number
   default = 3000
 }
 
 variable "cpu" {
+  type = string
   default = "256"
 }
 
 variable "memory" {
+  type = string
   default = "512"
 }
 
 variable "desired_count" {
+  type = number
   default = 2
 }
 
 variable "vpc_id" {
-  default = ""
+  type = string
 }
 
 variable "private_subnets" {
@@ -43,5 +47,5 @@ variable "private_subnets" {
 }
 
 variable "security_group_id" {
-    default = ""
+  type = string
 }
