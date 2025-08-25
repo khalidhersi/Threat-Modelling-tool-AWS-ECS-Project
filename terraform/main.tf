@@ -14,11 +14,11 @@ module "vpc" {
 module "alb" {
   source = "./modules/alb"
 
-  alb_name          = "app-alb"
+  alb_name          = var.alb_name
   vpc_id            = module.vpc.vpc_id
   public_subnets    = module.vpc.public_subnets
   alb_sg            = module.vpc.alb_sg_ids
-  target_group_name = "app-tg"
+  target_group_name = var.target_group_name
   target_group_port = 3000
 }
 

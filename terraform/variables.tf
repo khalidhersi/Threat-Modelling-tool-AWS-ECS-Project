@@ -68,3 +68,13 @@ variable "desired_count" {
   description = "Number of running ECS tasks"
   default     = 1
 }
+
+variable "alb_name" {
+  type        = string
+  description = "Application load balancer name"
+}
+
+variable "target_group_name" {
+  type        = string
+  description = "Application load balancer target group name"
+}
