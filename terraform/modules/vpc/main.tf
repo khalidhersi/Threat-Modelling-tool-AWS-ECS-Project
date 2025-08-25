@@ -155,7 +155,7 @@ resource "aws_ecr_repository" "web" {
   }
 }
 
-resource "aws_security_group" "albSg" {
+resource "aws_security_group" "alb_sg" {
   name   = "alb"
   vpc_id = aws_vpc.this.id
 

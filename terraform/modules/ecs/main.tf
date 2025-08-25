@@ -1,4 +1,4 @@
-resource "aws_ecs_cluster" "thiis" {
+resource "aws_ecs_cluster" "this" {
   name = var.cluster_name
 }
 
