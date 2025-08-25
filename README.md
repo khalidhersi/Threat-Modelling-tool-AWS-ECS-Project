@@ -1,49 +1,102 @@
+# 🧪 Assignment 1 – Open Source App on ECS with Terraform
+
+This project is based on [**Amazon's Threat Composer Tool**](https://awslabs.github.io/threat-composer/workspaces/default/dashboard), an open-source platform designed to:
+
+- ✍️ Facilitate **visual threat modeling**
+- 🔐 Improve **security assessments**
+- 🚀 Enable teams to model threats in a collaborative dashboard
+
+---
+
+## 🚀 What's Live Now — Production Infra & CI/CD Highlights
+
+This repo now includes a **fully automated, cloud-native DevOps pipeline**, using modern best practices:
+
+### ✅ Infra & Deployment Features
+
+- **App containerized** and hosted on **Amazon ECR**
+- **Deployed on ECS Fargate** (no public IPs; uses NAT gateway via private subnets)
+- **Modular Terraform infrastructure** (VPC, ALB, ECS split cleanly)
+- **CI/CD via GitHub Actions**:
+  - 🔄 Auto-builds Docker image on push to `main`
+  - 📤 Pushes to ECR
+  - 🛠 Patches ECS task definition
+  - 🚢 Updates ECS Service — **no manual `terraform apply` needed**
+- **GitHub OIDC IAM Role** — secure, access-key-free deploys
+- **S3 Bucket Provisioned**: `klds-ecs-threat-composer-tool-s3-bucket`
+- **AWS Region**: `eu-west-2 (London)`
+
+---
+
 <div align="center">
-    <img src="./images/coderco.jpg" alt="CoderCo" width="300"/>
+    <img src="./images/archeture-diagram.png" alt="CoderCo" width="300"/>
 </div>
 
-# CoderCo Assignment 1 - Open Source App Hosted on ECS with Terraform 🚀
+---
 
-This project is based on Amazon's Threat Composer Tool, an open source tool designed to facilitate threat modeling and improve security assessments. You can explore the tool's dashboard here: [Threat Composer Tool](https://awslabs.github.io/threat-composer/workspaces/default/dashboard)
+## 🛠 Infrastructure Overview (Provisioned via Terraform)
 
-## Task/Assignment 📝
+- **ECS Cluster** (Fargate launch type)
+- **ECR Repository**: `ecs-threat-composer-tool`
+- **ECS Task Definition** (patched dynamically via CI)
+- **ALB** (Application Load Balancer) with target group and listeners
+- **Private Subnets** (for ECS tasks)
+- **Public Subnets** (for ALB)
+- **NAT Gateway** (to allow ECS tasks internet access)
+- **S3 Bucket**: `klds-ecs-threat-composer-tool-s3-bucket`
+- **IAM Roles**:
+  - ECS Task Execution Role
+  - GitHub OIDC Deployment Role (`github-deploy-role`)
 
-- Create your own repository and complete the task there. You may create a `app` in your repo and copy all the files in this directory into it. Or alternatively, you can use this directory as is. Your choice.
+---
 
-- Your task will be to create a container image for the app, push it to ECR (recommended) or DockerHub. Ideally, you should use a CI/CD pipeline to build, test, and push the container image.
+## 🤖 CI/CD Pipeline – GitHub Actions
 
-- Deploy the app on ECS using Terraform. All the resources should be provisioned using Terraform. Use TF modules.
+A workflow runs on every push to `main` and performs:
 
-- Make sure the app is live on `https://tm.<your-domain>` or `https://tm.labs.<your-domain>`
+1. 🔧 **Builds the Docker image**
+2. 📤 **Pushes image to ECR**  
 
-- App must use HTTPS. Hosted on ECS. Figure out the rest. Once app is live, add screenshots to the README.md file.
+226754875437.dkr.ecr.eu-west-2.amazonaws.com/ecs-threat-composer-tool:latest
 
-- Add architecture diagram of how the infrastructure is setup. (Use Lucidchart or draw.io or mermaid) You are free to use any diagramming tool.
+3. 📦 **Fetches current ECS task definition**
+4. 🔁 **Patches task definition with new image**
+5. 🆕 **Registers updated task definition**
+6. 🔄 **Updates ECS Service**
 
-## Local app setup 💻
+✅ **No Terraform Apply needed after initial setup**
 
-```bash
-yarn install
-yarn build
-yarn global add serve
-serve -s build
+---
 
-#yarn start
-http://localhost:3000/workspaces/default/dashboard
+## 🔐 Secure Auth: GitHub OIDC Role
 
-## or
-yarn global add serve
-serve -s build
-```
+- Uses **OpenID Connect (OIDC)** via IAM role: `github-deploy-role`
+- No long-term AWS access keys
+- Role is restricted to:
+- `repo: khalidhersi/ecs-threat-composer-tool`
+- `branch: main`
 
-## Useful links 🔗
+---
 
-- [Terraform AWS Registry](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
-- [Terraform AWS ECS](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_cluster)
+## 🧠 Terraform Best Practices Followed
+
+- 🔹 **Modular structure**:
+
+/modules/vpc
+/modules/alb
+/modules/ecs
+
+- 🔹 Uses **outputs** to link modules
+- 🔹 **Private subnets + NAT** = secure outbound access for ECS
+- 🔹 **Public ALB** routes to ECS via Target Group
+- 🔹 **ECR repo** managed by Terraform
+- 🔹 IAM roles are **least-privilege and explicitly defined**
+
+---
+
+## 🔗 Useful Resources
+
+- [Terraform AWS Provider](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
+- [Terraform ECS Cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_cluster)
 - [Terraform Docs](https://www.terraform.io/docs/index.html)
-- [ECS Docs](https://docs.aws.amazon.com/ecs/latest/userguide/what-is-ecs.html)
-
-## Advice & Tips �
-
-- This is just a simple app, you may use another app if you'd like. 
-- Use best practices for your Terraform code. Use best practices for your container image. Use best practices for your CI/CD pipeline.
+- [Amazon ECS User Guide](https://docs.aws.amazon.com/ecs/latest/userguide/what-is-ecs.html)
