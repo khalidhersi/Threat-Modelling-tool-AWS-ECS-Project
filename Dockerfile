@@ -2,16 +2,17 @@
 FROM node:20-alpine AS build
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 COPY . .
 RUN npm run build
 
-# Stage 2: Preparing app to Run
-FROM node:20-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --omit=dev
-EXPOSE 3000
-CMD [ "npm", "run", "start" ]
+# Stage 2: Preparing app to Run with Nginc
+FROM nginx:alpine
+COPY --from=build /app/build /usr/share/nginx/html
 
+# Optional: handle routing for React Router (SPA)
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
 

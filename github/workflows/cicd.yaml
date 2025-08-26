@@ -1,4 +1,4 @@
-name: Deploy to ECR
+name: Deploy React App to ECR
 
 on:
   push:
@@ -8,10 +8,11 @@ on:
 env:
   AWS_REGION: eu-west-2
   ECR_REPOSITORY: ecs-threat-composer-tool
+  ACCOUNT_ID: 226754875437
 
 jobs:
   deploy:
-    name: Build and Push to ECR
+    name: Build and Push to Amazon ECR
     runs-on: ubuntu-latest
 
     permissions:
@@ -19,10 +20,10 @@ jobs:
       contents: read
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Configure AWS credentials from OIDC
+      - name: Configure AWS credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
@@ -31,8 +32,14 @@ jobs:
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build and Push Docker image to ECR
+      - name: Build Docker image (React App with Nginx)
         run: |
           docker build -t $ECR_REPOSITORY:latest .
-          docker tag $ECR_REPOSITORY:latest 226754875437.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/$ECR_REPOSITORY:latest
-          docker push 226754875437.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/$ECR_REPOSITORY:latest
+
+      - name: Tag image with full ECR URL
+        run: |
+          docker tag $ECR_REPOSITORY:latest $ACCOUNT_ID.dkr.ecr.${AWS_REGION}.amazonaws.com/$ECR_REPOSITORY:latest
+
+      - name: Push image to Amazon ECR
+        run: |
+          docker push $ACCOUNT_ID.dkr.ecr.${AWS_REGION}.amazonaws.com/$ECR_REPOSITORY:latest
