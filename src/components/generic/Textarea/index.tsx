@@ -19,12 +19,12 @@ import { BaseChangeDetail } from '@cloudscape-design/components/input/interfaces
 import { NonCancelableEventHandler } from '@cloudscape-design/components/internal/events';
 import TextareaComponent, { TextareaProps as TextareaComponetProps } from '@cloudscape-design/components/textarea';
 import React, { FC, useCallback } from 'react';
-import { z } from 'zod';
+import { SafeParseReturnType } from 'zod';
 import useContentValidation from '../../../hooks/useContentValidation';
 
 export interface TextAreaProps extends FormFieldProps, TextareaComponetProps {
   ref?: React.ForwardedRef<any>;
-  validateData?: (newValue: string) => z.SafeParseReturnType<string | undefined, string | undefined>;
+  validateData?: (newValue: string) => SafeParseReturnType<string | undefined, string | undefined>;
   singleLine?: boolean;
 }
 

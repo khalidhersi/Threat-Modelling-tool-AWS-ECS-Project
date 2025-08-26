@@ -18,12 +18,12 @@ import CloudscapeAutosuggest, { AutosuggestProps as CloudscapeAutosuggestProps }
 import FormField, { FormFieldProps } from '@cloudscape-design/components/form-field';
 import { BaseKeyDetail, CancelableEventHandler } from '@cloudscape-design/components/internal/events';
 import React, { FC, useCallback, useState } from 'react';
-import { z } from 'zod';
+import { SafeParseReturnType } from 'zod';
 import useContentValidation from '../../../hooks/useContentValidation';
 
 export interface AutosuggestProps extends FormFieldProps, Omit<CloudscapeAutosuggestProps, 'errorText'> {
   ref?: React.ForwardedRef<any>;
-  validateData?: (newValue: string) => z.SafeParseReturnType<string | undefined, string | undefined>;
+  validateData?: (newValue: string) => SafeParseReturnType<string | undefined, string | undefined>;
 }
 
 const Autosuggest: FC<AutosuggestProps> = React.forwardRef<CloudscapeAutosuggestProps.Ref, AutosuggestProps>(({

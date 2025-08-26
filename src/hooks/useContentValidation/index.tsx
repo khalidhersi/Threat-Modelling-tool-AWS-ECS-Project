@@ -17,13 +17,14 @@
 import { BaseChangeDetail } from '@cloudscape-design/components/input/interfaces';
 import { NonCancelableEventHandler } from '@cloudscape-design/components/internal/events';
 import { useCallback, useEffect, useState } from 'react';
-import { z } from 'zod';
+import { SafeParseReturnType } from 'zod';
+
 import sanitizeHtml from '../../utils/sanitizeHtml';
 
 const useContentValidation = (
   value: string,
   onChange?: NonCancelableEventHandler<BaseChangeDetail>,
-  validateData?: (newValue: string) => z.SafeParseReturnType<string | undefined, string | undefined>,
+  validateData?: (newValue: string) => SafeParseReturnType<string | undefined, string | undefined>,
 ) => {
   const [tempValue, setTempValue] = useState(value);
   const [errorText, setErrorText] = useState('');
