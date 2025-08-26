@@ -97,6 +97,9 @@ resource "aws_security_group" "webSg" {
 
 resource "aws_s3_bucket" "s3Bucket" {
   bucket = var.bucket_name
+  tags = {
+    Name = var.bucket_name
+  }
 }
 
 resource "aws_eip" "nat1" {
@@ -147,13 +150,13 @@ resource "aws_route_table_association" "private_rta2" {
   route_table_id = aws_route_table.private_rt2.id
 }
 
-resource "aws_ecr_repository" "web" {
-  name                 = var.name
-  image_tag_mutability = "MUTABLE"
-  image_scanning_configuration {
-    scan_on_push = true
-  }
-}
+# resource "aws_ecr_repository" "web" {
+#   name                 = var.name
+#   image_tag_mutability = "MUTABLE"
+#   image_scanning_configuration {
+#     scan_on_push = true
+#   }
+# }
 
 resource "aws_security_group" "alb_sg" {
   name   = "alb"

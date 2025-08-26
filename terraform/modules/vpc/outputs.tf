@@ -1,7 +1,3 @@
-output "ecr_repository_url" {
-  value = aws_ecr_repository.web.repository_url
-}
-
 output "vpc_id" {
   value = aws_vpc.this.id
 }
