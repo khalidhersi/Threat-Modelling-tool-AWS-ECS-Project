@@ -30,7 +30,7 @@ resource "aws_lb_target_group" "this" {
   }
 
   tags = {
-    Name = "load balacner's target group"
+    Name = "load-balancer-target-group"
   }
 }
 

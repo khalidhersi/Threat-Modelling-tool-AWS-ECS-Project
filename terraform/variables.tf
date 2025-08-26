@@ -78,3 +78,9 @@ variable "target_group_name" {
   type        = string
   description = "Application load balancer target group name"
 }
+
+variable "target_group_port" {
+  type        = number
+  description = "Target group port"
+  default     = 3000
+}

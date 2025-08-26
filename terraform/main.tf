@@ -19,7 +19,7 @@ module "alb" {
   public_subnets    = module.vpc.public_subnets
   alb_sg            = module.vpc.alb_sg_id
   target_group_name = var.target_group_name
-  target_group_port = 3000
+  target_group_port = var.target_group_port
 }
 
 
