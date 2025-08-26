@@ -28,7 +28,7 @@ resource "aws_ecs_task_definition" "this" {
 }
 
 
-# running the orchestration on ECS
+# Running the orchestration on ECS 
 resource "aws_ecs_service" "this" {
   name            = var.service_name
   cluster         = aws_ecs_cluster.this.id
