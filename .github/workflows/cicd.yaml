@@ -8,7 +8,7 @@ on:
 env:
   AWS_REGION: eu-west-2
   ECR_REPOSITORY: ecs-threat-composer-tool
-  ACCOUNT_ID: 226754875437
+  ACCOUNT_ID:  ${{ secrets.AWS_ACCOUNT_ID }}
 
 jobs:
   deploy:
