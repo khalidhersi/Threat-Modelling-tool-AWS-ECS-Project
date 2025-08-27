@@ -1,7 +1,8 @@
 resource "aws_vpc" "this" {
   cidr_block           = var.vpc_cidr
-  enable_dns_support   = true
-  enable_dns_hostnames = true
+ tags = {
+    Name = "Vpc"
+  }
 }
 
 resource "aws_subnet" "public_subnet1" {
@@ -50,6 +51,9 @@ resource "aws_subnet" "private_subnet2" {
 
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.this.id
+    tags = {
+    Name = "internet gateway"
+  }
 }
 
 resource "aws_route_table" "rt" {
@@ -58,6 +62,10 @@ resource "aws_route_table" "rt" {
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.igw.id
+  }
+
+  tags = {
+    Name = "route table"
   }
 }
 
@@ -91,7 +99,7 @@ resource "aws_security_group" "webSg" {
   }
 
   tags = {
-    Name = "Web-sg"
+    Name = "Web secuirty group"
   }
 }
 
@@ -105,21 +113,37 @@ resource "aws_s3_bucket" "s3Bucket" {
 resource "aws_eip" "nat1" {
   domain     = "vpc"
   depends_on = [aws_internet_gateway.igw]
+
+  tags = {
+    Name ="elastic ip 1"
+  }
 }
 
 resource "aws_eip" "nat2" {
   domain     = "vpc"
   depends_on = [aws_internet_gateway.igw]
+
+  tags = {
+    Name ="elastic ip 2"
+  }
 }
 
 resource "aws_nat_gateway" "natgw1" {
   subnet_id     = aws_subnet.public_subnet1.id
   allocation_id = aws_eip.nat1.id
+
+  tags = {
+    Name ="nat gateway 1"
+  }
 }
 
 resource "aws_nat_gateway" "natgw2" {
   subnet_id     = aws_subnet.public_subnet2.id
   allocation_id = aws_eip.nat2.id
+
+  tags = {
+    Name ="nat gateway 2"
+  }
 }
 
 resource "aws_route_table" "private_rt1" {
@@ -129,6 +153,10 @@ resource "aws_route_table" "private_rt1" {
     cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.natgw1.id
   }
+
+  tags = {
+    Name ="private route table 1"
+  }
 }
 
 resource "aws_route_table" "private_rt2" {
@@ -137,6 +165,10 @@ resource "aws_route_table" "private_rt2" {
   route {
     cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.natgw2.id
+  }
+
+  tags = {
+    Name ="private route table 2"
   }
 }
 
@@ -149,14 +181,6 @@ resource "aws_route_table_association" "private_rta2" {
   subnet_id      = aws_subnet.private_subnet2.id
   route_table_id = aws_route_table.private_rt2.id
 }
-
-# resource "aws_ecr_repository" "web" {
-#   name                 = var.name
-#   image_tag_mutability = "MUTABLE"
-#   image_scanning_configuration {
-#     scan_on_push = true
-#   }
-# }
 
 resource "aws_security_group" "alb_sg" {
   name   = "alb"

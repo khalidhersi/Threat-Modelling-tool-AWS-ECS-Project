@@ -8,6 +8,7 @@ module "vpc" {
   availability_zone1 = var.availability_zone1
   availability_zone2 = var.availability_zone2
   bucket_name        = var.bucket_name
+
 }
 
 # Aplication Load Balancer module
@@ -48,5 +49,9 @@ resource "aws_ecr_repository" "web" {
   image_tag_mutability = "MUTABLE"
   image_scanning_configuration {
     scan_on_push = true
+  }
+
+  tags = {
+    Name ="ecr respository"
   }
 }

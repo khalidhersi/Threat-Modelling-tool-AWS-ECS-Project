@@ -1,5 +1,9 @@
 resource "aws_ecs_cluster" "this" {
   name = var.cluster_name
+
+  tags = {
+    Name ="ecs cluster"
+  }
 }
 
 
@@ -25,6 +29,10 @@ resource "aws_ecs_task_definition" "this" {
       ]
     }
   ])
+
+  tags = {
+    Name ="ecs task definition"
+  }
 }
 
 
@@ -43,4 +51,8 @@ resource "aws_ecs_service" "this" {
   }
 
   depends_on = [aws_iam_role_policy_attachment.ecs_execution]
+
+  tags = {
+    Name ="ecs service"
+  }
 }
