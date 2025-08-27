@@ -79,30 +79,6 @@ resource "aws_route_table_association" "rta2" {
   subnet_id      = aws_subnet.public_subnet2.id
 }
 
-resource "aws_security_group" "webSg" {
-  name   = "web"
-  vpc_id = aws_vpc.this.id
-
-  ingress {
-    description = "HTTP from VPC"
-    from_port   = 3000
-    to_port     = 3000
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "Web secuirty group"
-  }
-}
-
 resource "aws_s3_bucket" "s3Bucket" {
   bucket = var.bucket_name
   tags = {
@@ -180,28 +156,4 @@ resource "aws_route_table_association" "private_rta1" {
 resource "aws_route_table_association" "private_rta2" {
   subnet_id      = aws_subnet.private_subnet2.id
   route_table_id = aws_route_table.private_rt2.id
-}
-
-resource "aws_security_group" "alb_sg" {
-  name   = "alb"
-  vpc_id = aws_vpc.this.id
-
-  ingress {
-    description = "HTTP from VPC"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "load balancer-sg"
-  }
 }
