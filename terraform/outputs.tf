@@ -16,3 +16,11 @@ output "ecs_execution_role_arn" {
 output "ecr_repository_url" {
   value = aws_ecr_repository.web.repository_url
 }
+
+output "web_sg_id" {
+  value = module.security_groups.web_sg_id
+}
+
+output "alb_sg_id" {
+  value = module.security_groups.alb_sg_id
+}

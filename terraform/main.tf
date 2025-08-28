@@ -23,7 +23,7 @@ module "alb" {
   alb_name          = var.alb_name
   vpc_id            = module.vpc.vpc_id
   public_subnets    = module.vpc.public_subnets
-  alb_sg            = module.vpc.alb_sg_id
+  alb_sg            = module.security_groups.alb_sg_id
   target_group_name = var.target_group_name
   target_group_port = var.target_group_port
 }
@@ -45,7 +45,7 @@ module "ecs" {
 
   vpc_id            = module.vpc.vpc_id
   private_subnets   = module.vpc.private_subnets
-  security_group_id = module.vpc.web_sg_id
+  security_group_id = module.security_groups.web_sg_id
 }
 
 # ECR repository
